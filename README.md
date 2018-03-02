@@ -5,3 +5,4 @@ Implementation of a variety of algorithms related to primality testing and numbe
   - AKS deterministic primality test
   - Fast-powering algorithm
   - Pollard's p-1 factoring algorithm
+  - Sieve of Eratosthenes
