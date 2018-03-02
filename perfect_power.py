@@ -9,7 +9,7 @@ def perfect_power(n):
             m = (a + c) // 2
             p = min(pow(m, b), n+1)
             if p == n:
-                return True, m, b
+                return True  # , m, b
             if p < n:
                 a = m
             else:
