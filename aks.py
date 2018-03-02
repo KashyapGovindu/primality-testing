@@ -2,6 +2,7 @@ from perfect_power import perfect_power
 import numpy as np
 from sieve_of_eratosthenes import sieve2
 from math import sqrt
+from scipy.special import binom
 
 ## DOES NOT WORK YET ##
 # Returns True if n is a prime, False if n is composite
@@ -22,7 +23,8 @@ def aks(n):
     if r == n:
         return True
     lim2 = 2 * np.ceil(sqrt(r)) * np.ceil(np.log2(n))
-    #for a in range(1, lim2):
+    for a in range(1, lim2):
+        coefficients = [binom(n, i) * pow(a, n-i) for i in range(n+1)]
     return "hello"
         # Test the polynomial equivalencies here
     
