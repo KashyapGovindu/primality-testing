@@ -32,14 +32,19 @@ def aks(n):
     lim2 = int(2 * np.ceil(sqrt(r)) * np.ceil(np.log2(n)))
     for a in range(1, lim2):
         coefficients = [binom(n, i) * pow(a, n-i) for i in range(n+1)]
+
+        # modulus = X^r - 1
         modulus = [0 for i in range(len(coefficients))]
-        modulus[r] = 1
-        modulus[len(modulus) - 1] = -1
+        modulus[r] = 1  # maybe modulus[r+1]?
+        modulus[0] = -1
+        
+        # check = X^(n mod r) + a
         check = [0 for i in range(len(coefficients))]
         check[n % r] = 1
-        check[len(check) - 1] = a
+        check[0] = a
         result = np.polydiv(coefficients, modulus)[1]
-        if not (check == result).all():
+        print(result)
+        if not (check == result):
             print(n, "determined composite in step 4")
             return False
     print(n, "determined prime in step 5")
