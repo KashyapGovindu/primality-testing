@@ -1,5 +1,6 @@
 from perfect_power import perfect_power
 import numpy as np
+from numpy.polynomial import polynomial as P
 from sieve_of_eratosthenes import sieve2
 from math import sqrt
 from scipy.special import binom
@@ -31,20 +32,21 @@ def aks(n):
         return True
     lim2 = int(2 * np.ceil(sqrt(r)) * np.ceil(np.log2(n)))
     for a in range(1, lim2):
-        coefficients = [binom(n, i) * pow(a, n-i) for i in range(n+1)]
-
-        # modulus = X^r - 1
-        modulus = [0 for i in range(len(coefficients))]
-        modulus[r] = 1  # maybe modulus[r+1]?
+        base = [a, 1]  # Base = a+1*X = X+a
+        modulus = [0 for i in range(r+1)]
         modulus[0] = -1
+        modulus[r] = 1  # modulus = X^r-1
+        # Compute (X+a)^n
+        coefficients = fast_power_poly(base, n, modulus, n)
         
         # check = X^(n mod r) + a
-        check = [0 for i in range(len(coefficients))]
+        #check = [0 for i in range(len(coefficients))]
+        check = np.zeros(len(coefficients))
         check[n % r] = 1
-        check[0] = a
-        result = np.polydiv(coefficients, modulus)[1]
-        print(result)
-        if not (check == result):
+        check[0] = a  # check = X^(n mod r) + a
+        #print(check)
+        #print(coefficients)
+        if not (check == coefficients).all():
             print(n, "determined composite in step 4")
             return False
     print(n, "determined prime in step 5")
@@ -70,10 +72,59 @@ def list_primes(n):
             A[i*i::i] = False
     return np.nonzero(A)[0]
 
+# base is array of coefficients, polynomial rings in Z_n
+def fast_power_poly(base, power, modulus, Z_n):
+    result = 1
+    while power > 0:
+        # If power is even
+        if power % 2 == 0:
+            # Divide the power by 2
+            power = power / 2
+            # Multiply base to itself
+            square = P.polymul(base, base)
+            base = P.polydiv(square, modulus)[1]
+            # Keep the coefficients in Z_n
+            base = base % Z_n
+        else:
+            # Decrement the power by 1 and make it even
+            power = power - 1
+            # Take care of the extra value that we took out
+            # We will store it directly in result
+            mult = P.polymul(result, base)
+            result = P.polydiv(mult, modulus)[1]
+            # Keep the coefficients in Z_n
+            result = result % Z_n
+
+            # Now power is even, so we can follow our previous procedure
+            power = power / 2
+            square = P.polymul(base, base)
+            base = P.polydiv(square, modulus)[1]
+            # Keep the coefficients in Z_n
+            base = base % Z_n
+
+    return result
+
+# brute force primality test to check our results
+def brute_force_prime_test(n):
+    for i in range(2, int(sqrt(n)) + 1):
+        if n % i == 0:
+            return False
+    return True
+
+
+
 if __name__=='__main__':
     #aks(5)
-    for i in range(2, 500):
-        aks(i)
+    primes_aks = []
+    primes = []
+    for i in range(2, 1000):
+        if aks(i): primes_aks.append(i)
+        if brute_force_prime_test(i): primes.append(i)
+
+    if primes_aks == primes:
+        print("success")
+    else:
+        print("failed")
     '''maybe_primes = []
     for i in range(2, 200):    
         if aks(i):
