@@ -6,3 +6,4 @@ Implementation of a variety of algorithms related to primality testing and numbe
   - Fast-powering algorithm
   - Pollard's p-1 factoring algorithm
   - Sieve of Eratosthenes
+  - RSA encryption system
