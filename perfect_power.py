@@ -2,7 +2,8 @@
 # Checks if n >= 1 is a perfect power (n = a^b for some a, b >= 2)
 def perfect_power(n):
     b = 2
-    while pow(2, b) <= n:
+    cp = pow(2, b)
+    while cp <= n:
         a = 1
         c = n
         while c-a >= 2:
@@ -15,6 +16,7 @@ def perfect_power(n):
             else:
                 c = m
         b += 1
+        cp *= 2
     return False
 
 if __name__ == '__main__':
@@ -26,6 +28,7 @@ if __name__ == '__main__':
             break
         pp = perfect_power(n)
         if pp:
-            print('perfect power: ' + str(n) + '=' + str(pp[1]) + '^' + str(pp[2]))
+            #print('perfect power: ' + str(n) + '=' + str(pp[1]) + '^' + str(pp[2]))
+            print("perfect power")
         else:
-            print('not a perfect power')
+            print("not a perfect power")
