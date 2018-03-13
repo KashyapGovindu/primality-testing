@@ -1,8 +1,10 @@
 from random import randint
 
 
-# returns true if n is composite, false if inconclusive
+# returns true if n is (probably) prime, false if composite
 def miller_rabin(n):
+    if n < 2:
+        return False
     m, q = remove_twos(n-1, 0)
     for i in range(100):
         composite = True
@@ -15,8 +17,8 @@ def miller_rabin(n):
             if x == n-1:
                 composite = False
         if composite:
-            return True
-    return False
+            return False
+    return True
 
 
 # returns odd integer m such that n=(2^q)m for some q, returns m and q
