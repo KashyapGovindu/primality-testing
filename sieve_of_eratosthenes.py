@@ -24,11 +24,18 @@ def sieve2(n):
     #return np.nonzero(A)[0]
     return A
 
+# Returns a list of all primes less than or equal to n
+def prime_list(n):
+    A = sieve2(n)
+    return np.nonzero(A)[0]
+
+
 if __name__ == '__main__':
-    t0 = time()
+    '''t0 = time()
     sieve(1000000)
     t1 = time()
     sieve2(1000000)
     t2 = time()
     print("Sieve 1:", str(t1 - t0), "seconds")
-    print("Sieve 2:", str(t2 - t1), "seconds")
+    print("Sieve 2:", str(t2 - t1), "seconds")'''
+    print(prime_list(100))

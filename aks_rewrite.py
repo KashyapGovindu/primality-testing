@@ -2,76 +2,64 @@ from perfect_power import perfect_power
 import numpy as np
 from numpy.polynomial import polynomial as P
 from sieve_of_eratosthenes import sieve2
-from math import sqrt
+from math import sqrt, ceil, gcd
 from scipy.special import binom
+from brute_force import brute_force_prime_test
 
+PRIME = True
+COMPOSITE = False
 
 # Returns True if n is a prime, False if n is composite
 def aks(n):
-    if n < 2:
-        print("Primality not defined for numbers less than 2.")
-        return
-    if perfect_power(n) == True:
-        print(n, "determined composite in step 1")
-        return False
-    r = 2
-    lim1 = int(4 * pow(np.ceil(np.log2(n)), 2))
-    while r < n:
-        if n % r == 0:
-            print(n, "determined composite in step 2")
-            return False
-        limit = int(pow(2, np.ceil(np.log2(r))))
-        is_prime = sieve2(limit + 1)
-        if is_prime[r] == True:
-            #print("here for", n)
-            if subroutine(n, r, lim1) == True:
-                break
-        r += 1
-    if r == n:
-        print(n, "determined prime in step 3")
-        return True
-    lim2 = int(2 * np.ceil(sqrt(r)) * np.ceil(np.log2(n)))
-    for a in range(1, lim2):
-        base = [a, 1]  # Base = a+1*X = X+a
-        modulus = np.zeros(r+1)
-        #modulus = [0 for i in range(r+1)]
-        modulus[0] = -1
-        modulus[r] = 1  # modulus = X^r-1
-        # Compute (X+a)^n
-        coefficients = fast_power_poly(base, n, r, n)
+    if perfect_power(n):    # Step 1
+        print(n, "determined COMPOSITE in Step 1")
+        return COMPOSITE
 
-        # check = X^(n mod r) + a
-        #check = [0 for i in range(len(coefficients))]
+    r = find_r(n)           # Step 2
+
+    for a in range(2, r+1): # Step 3
+        x = gcd(a, n)
+        if 1 < x and x < n:
+            print(n, "determined COMPOSITE in Step 3")
+            return COMPOSITE
+
+    if n <= r:              # Step 4
+        print(n, "determined PRIME in Step 4")
+        return PRIME
+
+    # Step 5
+    # ** Note that r-1 is an overestimate for phi(r) **
+    limit = int(np.ceil(sqrt(r-1) * np.log2(n)))
+    for a in range(1, limit):
+        base = [a, 1]
+        coefficients = fast_power_poly(base, n, r, n)
         check = np.zeros(len(coefficients))
         check[n % r] = 1
-        check[0] = a  # check = X^(n mod r) + a
-        #print(check)
-        #print(coefficients)
+        check[0] = a
         if not (check == coefficients).all():
-            print(n, "determined composite in step 4")
-            return False
-    print(n, "determined prime in step 5")
-    return True
-        # Test the polynomial equivalencies here
+            print(n, "determined COMPOSITE in Step 5")
+            return COMPOSITE
 
-# Returns whether or not we should break from the while loop in aks
-def subroutine(n, r, limit):
-    #print(n, r, limit)
-    for i in range(1, limit + 1):
-        if pow(n, i, r) == 1:
-            return False
-    #print("returning true")
-    return True
+    print(n, "determined PRIME in Step 6")
+    return PRIME             # Step 6
 
-# Returns a list of the primes 2 <= p <= n to check with the AKS output
-def list_primes(n):
-    A = np.ones(n, dtype=bool)
-    A[:2] = False
-    m = int(np.sqrt(n))
-    for i in range(2, m):
-        if A[i] == True:
-            A[i*i::i] = False
-    return np.nonzero(A)[0]
+
+
+# Find the smallest r such that ord_r(n) not <= log^2 n
+def find_r(n):
+    limit = int(np.ceil((np.log2(n)) ** 2))
+
+    r = 2
+    while 1:
+        found = True
+        for k in range(1, limit):
+            if n % r == 1:
+                found = False
+                break
+        if found:
+            return r
+        r += 1
+
 
 # base is array of coefficients, polynomial rings in Z_n
 def fast_power_poly(base, power, r, Z_n):
@@ -123,26 +111,19 @@ def fast_power_poly(base, power, r, Z_n):
 
     return result
 
-# brute force primality test to check our results
-def brute_force_prime_test(n):
-    for i in range(2, int(sqrt(n)) + 1):
-        if n % i == 0:
-            return False
-    return True
-
 
 
 if __name__=='__main__':
-    base = [2, 12, 6, 1]
+    '''base = [2, 12, 6, 1]
     power = 1
     r = 2
     n = 11
     print(fast_power_poly(base, power, r, n))
-    #aks(5000011)
+    #aks(5000011)'''
 
     primes_aks = []
     primes = []
-    for i in range(2, 1000):
+    for i in range(2, 5000):
         if aks(i): primes_aks.append(i)
         if brute_force_prime_test(i): primes.append(i)
 
