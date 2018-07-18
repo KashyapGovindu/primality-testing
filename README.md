@@ -7,3 +7,5 @@ Implementation of a variety of algorithms related to primality testing and numbe
   - Pollard's p-1 factoring algorithm
   - Sieve of Eratosthenes
   - RSA encryption system
+
+Read the paper here: https://www.whitman.edu/Documents/Academics/Mathematics/2018/Worthington.pdf
