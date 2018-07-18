@@ -31,11 +31,4 @@ def prime_list(n):
 
 
 if __name__ == '__main__':
-    '''t0 = time()
-    sieve(1000000)
-    t1 = time()
-    sieve2(1000000)
-    t2 = time()
-    print("Sieve 1:", str(t1 - t0), "seconds")
-    print("Sieve 2:", str(t2 - t1), "seconds")'''
-    print(prime_list(100))
+    print(len(prime_list(200)))

@@ -5,7 +5,7 @@ from brute_force import brute_force_prime_test
 PRIME = True
 COMPOSITE = False
 
-THRESHOLD = 50   # Number of times Miller-Rabin should run
+THRESHOLD = 40   # Number of times Miller-Rabin should run
 
 # INPUT: Integer n to be tested, integer a as potential witness
 # returns true if n is (probably) prime, false if composite

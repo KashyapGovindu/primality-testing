@@ -11,6 +11,10 @@ COMPOSITE = False
 
 # Returns True if n is a prime, False if n is composite
 def aks(n):
+    if n < 2:
+        print("Primality not defined for integers < 2")
+        return
+
     if perfect_power(n):    # Step 1
         print(n, "determined COMPOSITE in Step 1")
         return COMPOSITE
@@ -112,15 +116,7 @@ def fast_power_poly(base, power, r, Z_n):
     return result
 
 
-
-if __name__=='__main__':
-    '''base = [2, 12, 6, 1]
-    power = 1
-    r = 2
-    n = 11
-    print(fast_power_poly(base, power, r, n))
-    #aks(5000011)'''
-
+def testing():
     primes_aks = []
     primes = []
     for i in range(2, 5000):
@@ -131,6 +127,29 @@ if __name__=='__main__':
         print("success")
     else:
         print("failed")
+
+
+if __name__=='__main__':
+    '''base = [2, 12, 6, 1]
+    power = 1
+    r = 2
+    n = 11
+    print(fast_power_poly(base, power, r, n))
+    #aks(5000011)'''
+
+
+    while True:
+        print()
+        try:
+            n = int(input("Enter a number: "))
+        except:
+            break
+
+        result = aks(n)
+        if result == COMPOSITE:
+            print('COMPOSITE')
+        elif result == PRIME:
+            print('PRIME')
     '''maybe_primes = []
     for i in range(2, 200):
         if aks(i):
